@@ -3,6 +3,7 @@ import cv2 as cv
 import numpy as np
 import threading
 import time
+        
 
 print(f"[DEBUG] Current thread: {threading.current_thread().name}")
 
@@ -14,10 +15,23 @@ lock = threading.Lock()
 
 def displayLoop():
     while True:
+        now = time.time()
         with lock:
-            for camip, frame in frames.items():
-                cv.imshow(camip, frame)
-        if cv.waitKey(1) == 27:  # ESC для выхода
+            deadCams = []
+            for camip, (frame, lastSeen) in frames.items():
+                if now-lastSeen > 10:
+                    deadCams.append(camip)
+                else:
+                    cv.imshow(camip, frame)
+
+        # dead del
+            for camip in deadCams:
+                print(f"[INFO] {camip} is offline. Removing...")
+                del frames[camip]
+                cv.destroyWindow(camip)
+        #
+
+        if cv.waitKey(1) == 27:
             break
         time.sleep(0.01)
     cv.destroyAllWindows()
@@ -28,8 +42,6 @@ def receiveFrames():
     camip = request.remote_addr
     print(f"Received {len(catch)} bytes")
     print(f"From {camip}")
-    with open("./catch.jpg", "wb") as file:
-        file.write(catch)
     nparr = np.frombuffer(catch, np.uint8)
     frame = cv.imdecode(nparr, cv.IMREAD_COLOR)
     if frame is None:
@@ -38,7 +50,7 @@ def receiveFrames():
     else:
         print("Successfully decoded")
         with lock:
-            frames[camip] = frame
+            frames[camip] = (frame, time.time())
         
 
 
