@@ -4,13 +4,13 @@ import numpy as np
 import threading
 import time
 import camclass as cm
+import detect
         
 
 print(f"[DEBUG] Current thread: {threading.current_thread().name}")
 
 app = Flask(__name__)
 
-# frames = {}
 cams = []
 
 lock = threading.Lock()
@@ -39,7 +39,6 @@ def displayLoop():
                 print(f"[INFO] {camip} is offline. Removing...")
                 cams.remove(get_cam_by_ip(camip))
                 cv.destroyWindow(camip)
-        #
 
         if cv.waitKey(1) == 27:
             break
@@ -59,6 +58,8 @@ def receiveFrames():
         return "Invalid image", 400
     else:
         print("Successfully decoded")
+        amountOfPeople, frame = detect.people(frame)
+        mountOfGuns, frame = detect.guns(frame)
         with lock:
             cam = get_cam_by_ip(camip)
             if cam == None:
