@@ -3,6 +3,7 @@ import cv2 as cv
 import numpy as np
 import threading
 import time
+import camclass as cm
         
 
 print(f"[DEBUG] Current thread: {threading.current_thread().name}")
@@ -10,24 +11,34 @@ print(f"[DEBUG] Current thread: {threading.current_thread().name}")
 app = Flask(__name__)
 
 
-frames = {}
+# frames = {}
+cams = []
+
 lock = threading.Lock()
+
+def get_cam_by_ip(ip):
+    for cam in cams:
+        if cam.ip == ip:
+            return cam
+    return None
+
 
 def displayLoop():
     while True:
         now = time.time()
         with lock:
             deadCams = []
-            for camip, (frame, lastSeen) in frames.items():
-                if now-lastSeen > 10:
-                    deadCams.append(camip)
+            for cam in cams:
+                if now-cam.lastSeen >= 10:
+                    deadCams.append(cam.ip)
                 else:
-                    cv.imshow(camip, frame)
+                    if cam.frame is not None:
+                        cv.imshow(cam.ip, cam.frame)
 
         # dead del
             for camip in deadCams:
                 print(f"[INFO] {camip} is offline. Removing...")
-                del frames[camip]
+                cams.remove(get_cam_by_ip(camip))
                 cv.destroyWindow(camip)
         #
 
@@ -50,11 +61,11 @@ def receiveFrames():
     else:
         print("Successfully decoded")
         with lock:
-            frames[camip] = (frame, time.time())
-        
-
-
-
+            cam = get_cam_by_ip(camip)
+            if cam == None:
+                cam = cm.Camera(camip)
+                cams.append(cam)
+            cam.update(frame)
     return "OK", len(catch)
 
 
