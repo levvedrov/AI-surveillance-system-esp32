@@ -2,12 +2,16 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <vector>
 
 #define CAMERA_MODEL_AI_THINKER
 
 const char* ssid = "FiberNet_45";
 const char* password = "Levyshka2014";
 const char* server = "http://192.168.50.226:5000/snap"; // use your server IP
+
+std::vector<String> servers = { "192.168.50.226:5000" , "192.168.50.191:5000"}; // use your servers' IP
+
 
 void connectWiFi(const char*, const char*);
 
@@ -71,19 +75,25 @@ int camsnap(){
   camera_fb_t* frame = esp_camera_fb_get();
   if (!frame){ Serial.println("[ ! ] Capture failed"); return 1;}
   else {
-    Serial.println("Frame captured!"); 
-    Serial.printf("  Size: %d bytes \n", frame->len); 
-    Serial.printf("  Ressolution: %dx%d \n", frame->width, frame->height); 
+    Serial.println("Frame captured..."); 
+    Serial.printf(" - Size: %d bytes \n", frame->len); 
+    Serial.printf(" - Ressolution: %dx%d \n", frame->width, frame->height); 
   }
 
-  HTTPClient http;
-  http.begin(server);
-  http.addHeader("Content-Type", "image/jpeg");
+  
+  for (unsigned int index=0; index < servers.size(); index++){
+    HTTPClient http;
+    http.begin("http://"+servers[index]+"/snap");
+    http.addHeader("Content-Type", "image/jpeg");
+    int postStatus = http.POST(frame->buf, frame->len);
 
-  int postStatus = http.POST(frame->buf, frame->len);
-
-  if (postStatus > 0) { Serial.printf("  Sent to %s. Response: %d\n", server, postStatus); }
-  else { Serial.printf("  Error: %s\n", http.errorToString(postStatus).c_str()); }
+    if (postStatus > 0) { Serial.printf("[ > ] -------> Sent to %s. Response: %d\n", servers[index].c_str(), postStatus); }
+    else { Serial.printf("[ ! ] -------X %s Error: %s\n", servers[index].c_str(), http.errorToString(postStatus).c_str()); }
+    http.end();
+  }
+  Serial.println();
+  
+  
 
   esp_camera_fb_return(frame);
   delay(100);
