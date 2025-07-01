@@ -9,7 +9,6 @@ print(f"[DEBUG] Current thread: {threading.current_thread().name}")
 
 app = Flask(__name__)
 
-
 frames = {}
 lock = threading.Lock()
 
