@@ -2,8 +2,6 @@
 
 > Real-time multi-camera surveillance system with AI-based detection of weapons and people. Built with ESP32-CAM, YOLOv8, Flask, and Qt.
 
-![image](https://github.com/user-attachments/assets/1bc702db-762e-4786-a803-9f0ad2fd03e2)
-
 ## Overview
 
 This project implements a scalable AI-powered surveillance system consisting of:
@@ -63,8 +61,7 @@ All AI computations are performed **on the server**, enabling lightweight camera
 ## System Architecture
 
 ```
-[ESP32-CAM] ---> [Python Flask Server w/ YOLOv8] ---> [Qt GUI Client]
-   (Frame)               (Detection + Storage)              (Display)
+![image](https://github.com/user-attachments/assets/1bc702db-762e-4786-a803-9f0ad2fd03e2)
 ```
 
 > All detection is centralized — ESP32 nodes are lightweight, cost-efficient, and easy to deploy.
