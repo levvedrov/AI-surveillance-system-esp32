@@ -127,16 +127,17 @@ AI-surveillance-system-esp32/
 ## Features
 
 - Realtime multi-camera support
-- AI detection of people and weapons 
+- AI detection of people and weapons
+- Telegram notifications via bot in case of threat detection
 - Offline ESP32 processing (no detection load)
 - Smooth cross-platform GUI
-- Modular and extensible system
+- Modular and extensible system: The ESP32-CAM costs around $7, making it a cost-effective option for covering larger areas.
 
 ---
 
 ## Future Improvements
 
-- Add authentication layer between camera and server
+- HTTPs instead of HTTP
 - Cloud upload and remote access
 - Mobile version of GUI client
 - Add motion detection and smart frame skipping
