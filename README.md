@@ -66,17 +66,6 @@ All AI computations are performed **on the server**, enabling lightweight camera
 > All detection is centralized — ESP32 nodes are lightweight, cost-efficient, and easy to deploy.
 
 ---
-
-## Suggested Images for README
-
-- Replace `assets/system_architecture.png` with:
-  - System Architecture Diagram (like shown above)
-  - Sample detection output: annotated frames with boxes
-  - ESP32 camera setup in real-world use case
-  - Screenshot of Qt GUI with multiple feeds
-
----
-
 ## How to Run
 
 ### Prerequisites
