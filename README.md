@@ -56,6 +56,8 @@ All AI computations are performed **on the server**, enabling lightweight camera
   - Model: `YOLOv8m`
   - Optimized for pistols, rifles, and knives
 
+![image](https://github.com/user-attachments/assets/a4b3d319-e660-4e9d-b266-6353d61c8a3d)
+
 ---
 
 ## System Architecture
