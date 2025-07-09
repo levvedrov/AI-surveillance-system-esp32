@@ -157,4 +157,5 @@ MIT — Feel free to use, modify, and expand upon.
 ## Author
 
 **Lev Vedrov**  
+levvedrov@g.skku.edu
 GitHub: [@levvedrov](https://github.com/levvedrov)
