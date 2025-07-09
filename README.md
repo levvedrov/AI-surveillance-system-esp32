@@ -1,6 +1,6 @@
 # AI Surveillance System with ESP32-CAM
 
-> Real-time multi-camera surveillance system with AI-based detection of weapons and people. Built with ESP32-CAM, YOLOv8, Flask, and Qt.
+> Real-time multi-camera surveillance system with AI-powered detection of people and weapons. Built with ESP32-CAM, YOLOv8, Flask, and Qt.
 
 ## Overview
 
