@@ -4,7 +4,7 @@ import cv2 as cv
 smallModel = YOLO("server/weights/yolov8s.pt")
 mediumModel = YOLO("server/weights/yolov8m.pt")
 largeModel = YOLO("server/weights/yolov8l.pt")
-gunModel = YOLO("server/weights/gun.pt")
+gunModel = YOLO("server/weights/best.pt")
 
 def people(img, model=largeModel):
     frame = img.copy()
@@ -30,16 +30,22 @@ def guns(frame, model=gunModel):
     for box in boxes:
         cls = int(box.cls[0])
         conf = float(box.conf[0])
-        if model.names[cls] == 'gun' and conf>0.7:
+        if model.names[cls] == 'pistol' and conf>0.5:
             x1,y1,x2,y2=map(int,box.xyxy[0])
-            cv.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
-            cv.putText(frame, f"GUN {conf:.2f}", (x1, y1-10),
-            cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+            cv.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            cv.putText(frame, f"pistol {conf:.2f}", (x1, y1-10),
+            cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
             amount+=1
-        if model.names[cls] == 'rifle' and conf>0.5:
+        if model.names[cls] == 'Rifle' and conf>0.5:
             x1,y1,x2,y2=map(int,box.xyxy[0])
-            cv.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            cv.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
             cv.putText(frame, f"RIFLE {conf:.2f}", (x1, y1-10),
-            cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+            cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+            amount+=1
+        if model.names[cls] == 'knife' and conf>0.5:
+            x1,y1,x2,y2=map(int,box.xyxy[0])
+            cv.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            cv.putText(frame, f"knife {conf:.2f}", (x1, y1-10),
+            cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
             amount+=1
     return amount, frame

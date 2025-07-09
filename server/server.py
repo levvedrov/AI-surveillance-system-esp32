@@ -32,7 +32,7 @@ def displayLoop():
                     deadCams.append(cam.ip)
                 else:
                     if cam.rawFrame is not None:
-                        # cv.imshow(cam.ip+"-annotated ", cam.annotatedFrame)
+                        cv.imshow(cam.ip+"-annotated ", cam.annotatedFrame)
                         pass
 
         # dead del
@@ -60,8 +60,9 @@ def receiveFrames():
     else:
         print("Successfully decoded")
 
-        amountOfPeople, annotatedFrame = detect.people(rawFrame)
-        # amountOfItems, annotatedFrame = detect.guns(rawFrame)
+        amountOfItems, annotatedFrame = detect.guns(rawFrame)
+        amountOfPeople, annotatedFrame = detect.people(annotatedFrame)
+    
         
         with lock:
             cam = get_cam_by_ip(camip)
@@ -79,7 +80,7 @@ def receiveFrames():
 
 
 
-@app.route("/   ", methods = ['GET'])
+@app.route("/getaliveips", methods = ['GET'])
 def sendAliveIps():
     with lock:
         return {"cams": [cam.ip for cam in cams]}   
