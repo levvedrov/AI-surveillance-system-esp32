@@ -122,7 +122,7 @@ AI-surveillance-system-esp32/
 
 ## Sample Output
 
-> Add a screenshot of detection results and GUI output here.
+> GUI output here.
 
 ---
 
