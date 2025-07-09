@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 import cv2 as cv
 import numpy as np
 import threading
@@ -31,8 +31,9 @@ def displayLoop():
                 if now-cam.lastSeen >= 10:
                     deadCams.append(cam.ip)
                 else:
-                    if cam.frame is not None:
-                        cv.imshow(cam.ip, cam.frame)
+                    if cam.rawFrame is not None:
+                        # cv.imshow(cam.ip+"-annotated ", cam.annotatedFrame)
+                        pass
 
         # dead del
             for camip in deadCams:
@@ -52,21 +53,66 @@ def receiveFrames():
     print(f"Received {len(catch)} bytes")
     print(f"From {camip}")
     nparr = np.frombuffer(catch, np.uint8)
-    frame = cv.imdecode(nparr, cv.IMREAD_COLOR)
-    if frame is None:
+    rawFrame = cv.imdecode(nparr, cv.IMREAD_COLOR)
+    if rawFrame is None:
         print("cv: Error in decoding the frame")
         return "Invalid image", 400
     else:
         print("Successfully decoded")
-        amountOfPeople, frame = detect.people(frame)
-        mountOfGuns, frame = detect.guns(frame)
+
+        amountOfPeople, annotatedFrame = detect.people(rawFrame)
+        # amountOfItems, annotatedFrame = detect.guns(rawFrame)
+        
         with lock:
             cam = get_cam_by_ip(camip)
             if cam == None:
                 cam = cm.Camera(camip)
                 cams.append(cam)
-            cam.update(frame)
+            cam.updateRaw(rawFrame)
+            cam.updateAnnotated(annotatedFrame)
     return "OK", len(catch)
+
+
+
+
+
+
+
+
+@app.route("/   ", methods = ['GET'])
+def sendAliveIps():
+    with lock:
+        return {"cams": [cam.ip for cam in cams]}   
+
+
+@app.route("/get", methods=['GET'])
+def frameToClient():
+    camip = request.args.get('ip')
+    print(f"[GET] Requested IP = {camip}")
+
+    if not camip:
+        print("[GET] No IP provided")
+        return "Missing IP", 400
+
+    with lock:
+        cam = get_cam_by_ip(camip)
+        if not cam:
+            print("[GET] Camera not found")
+            return "No such camera", 404
+        if cam.annotatedFrame is None:
+            print("[GET] No frame available yet")
+            return "No frame", 404
+
+        success, jpeg = cv.imencode(".jpg", cam.annotatedFrame)
+        if not success:
+            print("[GET] JPEG encoding failed")
+            return "Encoding error", 500
+
+        print("[GET] Sending encoded frame")
+        return Response(jpeg.tobytes(), mimetype='image/jpeg')
+
+
+
 
 
 

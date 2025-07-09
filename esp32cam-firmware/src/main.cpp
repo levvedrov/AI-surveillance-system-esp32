@@ -82,6 +82,7 @@ int camsnap(){
 
   
   for (unsigned int index=0; index < servers.size(); index++){
+    
     HTTPClient http;
     http.begin("http://"+servers[index]+"/snap");
     http.addHeader("Content-Type", "image/jpeg");
