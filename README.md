@@ -1,6 +1,3 @@
-
-
-
 # AI Surveillance System with ESP32-CAM
 
 > Real-time multi-camera surveillance system with AI-based detection of weapons and people. Built with ESP32-CAM, YOLOv8, Flask, and Qt.
@@ -39,7 +36,7 @@ All AI computations are performed **on the server**, enabling lightweight camera
 
 > Folder: `server/`
 
-### 🖥️ Qt GUI Client (C++)
+### Qt GUI Client (C++)
 
 - Developed using **Qt Creator**.
 - Fetches active camera IPs.
@@ -65,3 +62,110 @@ All AI computations are performed **on the server**, enabling lightweight camera
 
 ## System Architecture
 
+```
+[ESP32-CAM] ---> [Python Flask Server w/ YOLOv8] ---> [Qt GUI Client]
+   (Frame)               (Detection + Storage)              (Display)
+```
+
+> All detection is centralized — ESP32 nodes are lightweight, cost-efficient, and easy to deploy.
+
+---
+
+## Suggested Images for README
+
+- Replace `assets/system_architecture.png` with:
+  - System Architecture Diagram (like shown above)
+  - Sample detection output: annotated frames with boxes
+  - ESP32 camera setup in real-world use case
+  - Screenshot of Qt GUI with multiple feeds
+
+---
+
+## How to Run
+
+### Prerequisites
+
+- Python 3.11+
+- ESP32-CAM module (AI Thinker or similar)
+- PlatformIO (VSCode)
+- Qt Creator (for GUI client)
+- Ultralytics library: `pip install ultralytics`
+
+### 1. Flash ESP32-CAM
+
+```sh
+cd esp32cam-firmware/
+pio run --target upload
+```
+
+Update SSID, password, and server IP in the firmware before flashing.
+
+### 2. Start the Server
+
+```bash
+cd server/
+python app.py
+```
+
+Ensure the correct YOLO model weights exist under `server/weights`.
+
+### 3. Run the Client GUI
+
+Open `clienteye.pro` in Qt Creator and run the project.
+
+---
+
+## File Structure
+
+```
+AI-surveillance-system-esp32/
+├── esp32cam-firmware/       ESP32 source code
+├── server/                  Flask + YOLOv8 detection server
+│   ├── app.py
+│   ├── detect.py
+│   ├── camclass.py
+│   └── weights/             YOLOv8 models
+├── client/                  Qt GUI Client
+│   └── clienteye.cpp/h
+└── assets/
+    └── system_architecture.png
+```
+
+---
+
+## Sample Output
+
+> Add a screenshot of detection results and GUI output here.
+
+---
+
+## Features
+
+- Realtime multi-camera support
+- AI detection of people and weapons 
+- Offline ESP32 processing (no detection load)
+- Smooth cross-platform GUI
+- Modular and extensible system
+
+---
+
+## Future Improvements
+
+- Add authentication layer between camera and server
+- Cloud upload and remote access
+- Mobile version of GUI client
+- Add motion detection and smart frame skipping
+- Web dashboard (Flask + Bootstrap or React)
+
+---
+
+## License
+
+MIT — Feel free to use, modify, and expand upon.
+
+---
+
+## Author
+
+**Lev Vedrov**  
+GitHub: [@levvedrov](https://github.com/levvedrov)
