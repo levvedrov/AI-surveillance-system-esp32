@@ -4,6 +4,7 @@
 
 ## Overview
 
+
 This project implements a scalable AI-powered surveillance system consisting of:
 
 - **ESP32-CAM Nodes**: Capture JPEG images and send to the server.
