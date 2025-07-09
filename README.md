@@ -90,6 +90,8 @@ Update SSID, password, and server IP in the firmware before flashing.
 
 ### 2. Start the Server
 
+Update the Telegram bot token in `notification.py`
+
 ```bash
 cd server/
 python app.py
@@ -98,6 +100,8 @@ python app.py
 Ensure the correct YOLO model weights exist under `server/weights`.
 
 ### 3. Run the Client GUI
+
+Update the server IP in `clienteye.cpp`
 
 Open `clienteye.pro` in Qt Creator and run the project.
 
