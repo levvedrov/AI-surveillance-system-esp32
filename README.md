@@ -127,7 +127,9 @@ AI-surveillance-system-esp32/
 
 ## Sample Output
 
-> GUI output here.
+![aaddd](https://github.com/user-attachments/assets/3cdd6a00-c710-4e03-9f47-3e8678b3dac9)
+![aaaaaaaa](https://github.com/user-attachments/assets/726f7dd0-9c55-47b0-aee9-d3cfcbe5d13d)
+![image](https://github.com/user-attachments/assets/b7f9a009-42ca-40dd-8443-e18ddcee3766)
 
 ---
 
