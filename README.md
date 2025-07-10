@@ -134,7 +134,10 @@ AI-surveillance-system-esp32/
 
 ## Notifications:
 
-![image](https://github.com/user-attachments/assets/69696871-107e-419f-b61c-c924eeea9f8c)
+<img src="https://github.com/user-attachments/assets/69696871-107e-419f-b61c-c924eeea9f8c" width="400"/>
+<img src="https://github.com/user-attachments/assets/170b21d8-4375-4dbb-9dcb-0c6913343efb" width="400"/>
+
+
 
 ---
 
