@@ -6,6 +6,7 @@ class Camera:
         self.annotatedFrame = None
         self.lastSeen = time.time()
         self.framesSeen = 0
+        self.lastNotified = time.time()
 
     def updateRaw(self, frame):
         self.rawFrame = frame

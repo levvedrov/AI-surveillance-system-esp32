@@ -5,6 +5,10 @@ import threading
 import time
 import camclass as cm
 import detect
+from notification import notification
+import asyncio
+from datetime import datetime
+import threading
         
 
 print(f"[DEBUG] Current thread: {threading.current_thread().name}")
@@ -21,6 +25,8 @@ def get_cam_by_ip(ip):
             return cam
     return None
 
+def send_alert(header, text, raw, annotated):
+    asyncio.run(notification.send_telegram_notifification(header, text, raw, annotated))
 
 def displayLoop():
     while True:
@@ -46,6 +52,9 @@ def displayLoop():
         time.sleep(0.01)
     cv.destroyAllWindows()
 
+
+
+
 @app.route("/snap", methods = ['POST'])
 def receiveFrames():
     catch = request.data
@@ -59,10 +68,12 @@ def receiveFrames():
         return "Invalid image", 400
     else:
         print("Successfully decoded")
+        raw = rawFrame.copy()
+        status, annotatedFrame = detect.guns(rawFrame)
+        
 
-        amountOfItems, annotatedFrame = detect.guns(rawFrame)
         amountOfPeople, annotatedFrame = detect.people(annotatedFrame)
-    
+        
         
         with lock:
             cam = get_cam_by_ip(camip)
@@ -71,6 +82,16 @@ def receiveFrames():
                 cams.append(cam)
             cam.updateRaw(rawFrame)
             cam.updateAnnotated(annotatedFrame)
+
+        if status["pistol"]>0 and (time.time()-cam.lastNotified>10):
+             
+            threading.Thread(
+                target=send_alert,
+                args=("⚠️GUN DETECTED!⚠️", f"\nA <b>pistol</b> was detected at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} on {camip}", raw, annotatedFrame),
+                daemon=True
+            ).start()
+
+            cam.lastNotified = time.time()
     return "OK", len(catch)
 
 
@@ -116,7 +137,7 @@ def frameToClient():
 
 
 
-
 if __name__ == '__main__':
+    
     threading.Thread(target=displayLoop, daemon=True).start()
     app.run(host='0.0.0.0', port=5000)

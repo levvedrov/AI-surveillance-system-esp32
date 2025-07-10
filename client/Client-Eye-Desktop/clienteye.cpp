@@ -71,7 +71,7 @@ void ClientEye::requestCameraFrame(const QString &rawCamIp)
         return u.host().isEmpty() ? ip.trimmed() : u.host().trimmed();
     };
 
-    QString camIp = normalizeIp(rawCamIp); // 👈 нормализуем
+    QString camIp = normalizeIp(rawCamIp);
 
     const QUrl url(QString("http://%1:%2/get?ip=%3")
                        .arg(serverIp).arg(serverPort).arg(camIp));
