@@ -126,10 +126,13 @@ AI-surveillance-system-esp32/
 ---
 
 ## Sample Output
-
+Client
 <img src="https://github.com/user-attachments/assets/3cdd6a00-c710-4e03-9f47-3e8678b3dac9" width="300"/>
 <img src="https://github.com/user-attachments/assets/b7f9a009-42ca-40dd-8443-e18ddcee3766" width="300"/>
 <img src="https://github.com/user-attachments/assets/992de30b-985d-44e2-bd70-c6d797486eb8" width="300"/>
+
+Notifications
+![image](https://github.com/user-attachments/assets/69696871-107e-419f-b61c-c924eeea9f8c)
 
 ---
 
