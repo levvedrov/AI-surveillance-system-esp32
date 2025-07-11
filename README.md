@@ -140,6 +140,7 @@ AI-surveillance-system-esp32/
   <img src="https://github.com/user-attachments/assets/992de30b-985d-44e2-bd70-c6d797486eb8" width="300"/>
 </p>
 
+<img width="524" height="266" alt="image" src="https://github.com/user-attachments/assets/4f715cb2-0527-4b8d-a937-5230b72fab1b" />
 
 ## Notifications:
 
