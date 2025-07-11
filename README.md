@@ -93,6 +93,12 @@ Update SSID, password, and server IP in the firmware before flashing.
 Update the Telegram bot token in `notification.py`
 
 ```bash
+cd server/notification
+python notification.py
+```
+and then
+
+```bash
 cd server/
 python app.py
 ```
