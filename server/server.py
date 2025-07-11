@@ -3,6 +3,7 @@ import cv2 as cv
 import numpy as np
 import threading
 import time
+import collections, time, threading
 import camclass as cm
 import detect
 from notification import notification
@@ -54,45 +55,89 @@ def displayLoop():
 
 
 
+LAT_WIN  = 50 
+FPS_WIN  = 50         
+ALT_WIN  = 30 
+_stats   = {}
+
+
+def get_stats(ip):
+    d = _stats.setdefault(ip, {})
+    if "lat" not in d:
+        d["lat"] = collections.deque(maxlen=LAT_WIN)
+    if "ts"  not in d:
+        d["ts"]  = collections.deque(maxlen=FPS_WIN)
+    if "alt" not in d:
+        d["alt"] = collections.deque(maxlen=ALT_WIN)     # ← добавляем, если нет
+    return d
+
+def send_alert_with_latency(message, caption, raw, annotated, camip, t_capture):
+    t0 = time.time()
+    send_alert(message, caption, raw, annotated)   # ← ваш исходный синхронный вызов
+    alt_ms = (time.time() - t_capture) * 1000
+
+    with lock:
+        get_stats(camip)["alt"].append(alt_ms)
+
+
+def draw_stat(img, label, value, y, color):
+    text = f"{label:<4}{value:>6}"
+    (w, h), _ = cv.getTextSize(text, cv.FONT_HERSHEY_SIMPLEX, 0.7, 2)
+    cv.rectangle(img, (5, y - h - 6), (5 + w + 8, y + 4),
+                 (0, 0, 0), -1)                       # подложка
+    cv.putText(img, text, (10, y),
+               cv.FONT_HERSHEY_SIMPLEX, 0.7, color, 2, cv.LINE_AA)
+
+
 
 @app.route("/snap", methods = ['POST'])
 def receiveFrames():
-    catch = request.data
-    camip = request.remote_addr
-    print(f"Received {len(catch)} bytes")
-    print(f"From {camip}")
-    nparr = np.frombuffer(catch, np.uint8)
-    rawFrame = cv.imdecode(nparr, cv.IMREAD_COLOR)
+    t_capture = time.time()                                   # фиксация прихода
+    payload = request.data
+    camip   = request.remote_addr
+    rawFrame = cv.imdecode(np.frombuffer(payload, np.uint8), cv.IMREAD_COLOR)
     if rawFrame is None:
-        print("cv: Error in decoding the frame")
         return "Invalid image", 400
-    else:
-        print("Successfully decoded")
-        raw = rawFrame.copy()
-        status, annotatedFrame = detect.guns(rawFrame)
-        
 
-        amountOfPeople, annotatedFrame = detect.people(annotatedFrame)
-        
-        
-        with lock:
-            cam = get_cam_by_ip(camip)
-            if cam == None:
-                cam = cm.Camera(camip)
-                cams.append(cam)
-            cam.updateRaw(rawFrame)
-            cam.updateAnnotated(annotatedFrame)
+    # --- inf -------------------------------------------------------------
+    status, annotatedFrame = detect.guns(rawFrame.copy())
+    people_cnt, annotatedFrame = detect.people(annotatedFrame)
 
-        if status["pistol"]>0 and (time.time()-cam.lastNotified>10):
-             
-            threading.Thread(
-                target=send_alert,
-                args=("⚠️GUN DETECTED!⚠️", f"\nA <b>pistol</b> was detected at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} on {camip}", raw, annotatedFrame),
-                daemon=True
-            ).start()
+    with lock:
+        cam = get_cam_by_ip(camip) or cm.Camera(camip)
+        if cam not in cams: cams.append(cam)
+        cam.updateRaw(rawFrame); cam.updateAnnotated(annotatedFrame)
 
-            cam.lastNotified = time.time()
-    return "OK", len(catch)
+    # --- latency / fps ---------------------------------------------------
+    with lock:
+        st = get_stats(camip)
+        now = time.time()
+        st["lat"].append((now - t_capture) * 1000)
+        st["ts"].append(now)
+        med_lat = np.median(st["lat"])
+        fps     = 1/np.mean(np.diff(st["ts"])) if len(st["ts"])>1 else 0
+        med_alt = np.median(st["alt"]) if st["alt"] else 0
+
+    cv.putText(annotatedFrame, f"LAT {med_lat:.0f}ms", (10,25),
+               cv.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,255), 2)
+    cv.putText(annotatedFrame, f"FPS {fps:.1f}",   (10,50),
+               cv.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,255), 2)
+    if med_alt:
+        cv.putText(annotatedFrame, f"ALRT {med_alt:.0f}ms", (10,75),
+                   cv.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
+
+    # --- alert -----------------------------------------------------------
+    if status["pistol"] > 0 and (now - cam.lastNotified > 10):
+        threading.Thread(
+            target=send_alert_with_latency,
+            args=("⚠️GUN DETECTED!⚠️",
+                  f"<b>Pistol</b> detected at {datetime.now():%Y-%m-%d %H:%M:%S} on {camip}",
+                  rawFrame, annotatedFrame, camip, t_capture),
+            daemon=True
+        ).start()
+        cam.lastNotified = now
+
+    return "OK", len(payload)
 
 
 

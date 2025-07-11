@@ -16,7 +16,7 @@ def people(img, model=largeModel):
     for box in boxes:
         cls = int(box.cls[0])
         conf = float(box.conf[0])
-        if model.names[cls] == 'person' and conf>0.5:
+        if model.names[cls] == 'person' and conf>0.7:
             x1,y1,x2,y2=map(int,box.xyxy[0])
             cv.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv.putText(frame, f"Person {conf:.2f}", (x1, y1-10),
@@ -32,7 +32,7 @@ def guns(frame, model=gunModel):
     for box in boxes:
         cls = int(box.cls[0])
         conf = float(box.conf[0])
-        if model.names[cls] == 'pistol' and conf>0.5:
+        if model.names[cls] == 'pistol' and conf>0.75:
             x1,y1,x2,y2=map(int,box.xyxy[0])
             cv.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
             cv.putText(frame, f"pistol {conf:.2f}", (x1, y1-10),
