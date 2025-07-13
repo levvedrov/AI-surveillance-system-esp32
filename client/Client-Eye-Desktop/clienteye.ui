@@ -10,11 +10,20 @@
     <height>993</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1215</width>
+    <height>993</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1215</width>
+    <height>993</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>ClientEye</string>
-  </property>
-  <property name="autoFillBackground">
-   <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -22,8 +31,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>1221</width>
-      <height>981</height>
+      <width>1215</width>
+      <height>961</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -33,63 +42,113 @@
      <attribute name="title">
       <string>Live</string>
      </attribute>
-     <widget class="QFrame" name="frame">
-      <property name="geometry">
-       <rect>
-        <x>-10</x>
-        <y>-1</y>
-        <width>1211</width>
-        <height>71</height>
-       </rect>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::Shape::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Raised</enum>
-      </property>
-      <widget class="QLabel" name="ServerIpLable">
-       <property name="geometry">
-        <rect>
-         <x>26</x>
-         <y>14</y>
-         <width>1161</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Yu Gothic</family>
-         <pointsize>20</pointsize>
-         <italic>false</italic>
-         <bold>true</bold>
-         <underline>false</underline>
-         <strikeout>false</strikeout>
-         <kerning>true</kerning>
-        </font>
-       </property>
-       <property name="text">
-        <string>62.60.249.223:500 is live</string>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="gridLayoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>80</y>
-        <width>1171</width>
-        <height>851</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="camGrid">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-      </layout>
-     </widget>
+     <layout class="QVBoxLayout" name="verticalLayout_tab">
+      <item>
+       <widget class="QFrame" name="frame">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>71</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>71</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">
+QFrame { background-color: #2c3e50; border: none; }
+QLabel#serverStatusCircle {
+ background-color: #e74c3c;
+ border-radius: 14px;
+ color: white;
+ font-size: 12px;
+ font-weight: bold;
+}
+QLabel#ServerIpLable {
+ color: white;
+ font-size: 18px;
+ font-weight: bold;
+}
+        </string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="leftMargin">
+          <number>20</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>20</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item alignment="Qt::AlignmentFlag::AlignVCenter">
+          <widget class="QLabel" name="serverStatusCircle">
+           <property name="minimumSize">
+            <size>
+             <width>28</width>
+             <height>28</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>28</width>
+             <height>28</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>×</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignmentFlag::AlignVCenter">
+          <widget class="QLabel" name="ServerIpLable">
+           <property name="text">
+            <string>Server not checked</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="camGrid">
+        <property name="leftMargin">
+         <number>16</number>
+        </property>
+        <property name="topMargin">
+         <number>16</number>
+        </property>
+        <property name="rightMargin">
+         <number>16</number>
+        </property>
+        <property name="bottomMargin">
+         <number>16</number>
+        </property>
+        <property name="spacing">
+         <number>16</number>
+        </property>
+       </layout>
+      </item>
+     </layout>
     </widget>
     <widget class="QWidget" name="tab_2">
+     <property name="styleSheet">
+      <string notr="true">
+background-color: #1e272e;
+color: white;
+font-size: 14px;
+padding: 12px;
+</string>
+     </property>
      <attribute name="title">
       <string>Settings</string>
      </attribute>

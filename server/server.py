@@ -89,6 +89,9 @@ def draw_stat(img, label, value, y, color):
                cv.FONT_HERSHEY_SIMPLEX, 0.7, color, 2, cv.LINE_AA)
 
 
+@app.route('/ping')
+def ping():
+    return 'pong', 200
 
 @app.route("/snap", methods = ['POST'])
 def receiveFrames():

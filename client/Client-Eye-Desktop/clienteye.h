@@ -25,6 +25,7 @@ public:
 private:
     Ui::ClientEye *ui;
     QNetworkAccessManager* netManager;
+    void updateServerStatus();
 
     QString serverIp;
     int serverPort;
