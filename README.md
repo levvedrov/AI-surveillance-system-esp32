@@ -135,7 +135,7 @@ AI-surveillance-system-esp32/
 ## Client:
 
 <p align="center">
-  <img width="300" alt="Снимок экрана 2025-08-15 в 16 10 23" src="https://github.com/user-attachments/assets/be7b955c-bf5e-4183-9063-cca85ceeabf4" />
+  <img width="500" alt="Снимок экрана 2025-08-15 в 16 10 23" src="https://github.com/user-attachments/assets/be7b955c-bf5e-4183-9063-cca85ceeabf4" />
 
   <img width="524" height="266" alt="image" src="https://github.com/user-attachments/assets/4f715cb2-0527-4b8d-a937-5230b72fab1b" />
 </p>
