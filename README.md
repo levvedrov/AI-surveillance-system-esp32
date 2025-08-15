@@ -2,6 +2,8 @@
 
 > Real-time multi-camera surveillance system with AI-powered detection of people and weapons. Built with ESP32-CAM, YOLOv8, Flask, and Qt.
 
+IEEE AIoT 2025 OSAKA pending . . .
+
 ## Overview
 
 
